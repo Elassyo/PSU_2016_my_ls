@@ -20,11 +20,13 @@ NAME		=	my_ls
 
 SRCDIR		=	src
 
-SRC		=	my_ls.c
+SRC		=	my_ls.c		\
+			parse_args.c
 
 INCDIR		=	include
 
-INC		=	my.h
+INC		=	my.h		\
+			my_ls.h
 
 OBJ		=	$(SRC:.c=.o)
 
