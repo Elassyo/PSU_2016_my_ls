@@ -34,8 +34,6 @@ t_ls_file	*fs_read_file(t_ls_opts *opts, char *path, char *name)
   file->name = my_strdup(name ? name : path);
   if (opts->stat_func(file->path, &file->stat) == 0)
     return (file);
-  free(file->path);
-  free(file);
   return ((t_ls_file *)handle_error("cannot access", file->path, 0));
 }
 
@@ -71,15 +69,13 @@ void		fs_free_path(t_ls_path *path)
   t_ls_file	*last;
   t_ls_file	*current;
 
-  if (!path)
-    return ;
   free(path->str);
   if (path->target)
     {
       free(path->target->name);
       free(path->target->path);
+      free(path->target);
     }
-  free(path->target);
   if (path->content)
     {
       current = path->content;

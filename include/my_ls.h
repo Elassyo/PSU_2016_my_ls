@@ -56,6 +56,8 @@ typedef struct	s_ls_args
   t_ls_path	*paths;
 }		t_ls_args;
 
+int	my_ls(t_ls_opts *opts, t_ls_path *path, char first);
+
 long	handle_error(char *msg, char *path, long ret_code);
 void	*malloc_failed();
 

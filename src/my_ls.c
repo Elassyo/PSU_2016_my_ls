@@ -10,26 +10,59 @@
 
 #include <my_ls.h>
 
+int		my_ls_recurse(t_ls_opts *opts, t_ls_path *path)
+{
+  int		ret;
+  t_ls_path	subpath;
+  t_ls_file	*current;
+
+  ret = 0;
+  current = path->content;
+  while (current)
+    {
+      my_memset(&subpath, 0, sizeof(t_ls_path));
+      if (S_ISDIR(current->stat.st_mode) &&
+          strcmp(current->name, ".") && strcmp(current->name, ".."))
+	{
+	  if (!(subpath.target = fs_read_file(opts, path->str, current->name)))
+	    ret = 1;
+	  else
+	    {
+	      subpath.str = my_strdup(subpath.target->path);
+	      if (fs_read_path(opts, &subpath) || my_ls(opts, &subpath, 0))
+	        ret = 1;
+	    }
+	  fs_free_path(&subpath);
+	}
+      current = current->next;
+    }
+  return (ret);
+}
+
 void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
 {
-  char		*mode_str;
-  char		*mtime_str;
+  char		link[256];
+  char		*mode;
+  char		*mtime;
 
   if (opts->list)
     {
-      mode_str = stat_get_mode_str(file->stat.st_mode);
-      mtime_str = stat_get_mtime_str(file->stat.st_mtime);
-      my_printf("%s %ld %-10s %-10s", mode_str, file->stat.st_nlink,
+      mode = stat_get_mode_str(file->stat.st_mode);
+      mtime = stat_get_mtime_str(file->stat.st_mtime);
+      my_printf("%s %3ld %-10s %-10s", mode, file->stat.st_nlink,
 		getpwuid(file->stat.st_uid)->pw_name,
 		getgrgid(file->stat.st_gid)->gr_name);
-      if (*mode_str == 'c' || *mode_str == 'b')
-	my_printf("%5d,%4d ", major(file->stat.st_rdev), minor(file->stat.st_rdev));
+      if (*mode == 'c' || *mode == 'b')
+	my_printf("%5d,%4d ", major(file->stat.st_rdev),
+	          minor(file->stat.st_rdev));
       else
 	my_printf("%10lld ", file->stat.st_size);
-      my_printf("%s %s", mtime_str, file->name);
+      my_printf("%s %s%s", mtime, file->name, *mode == 'l' ? " -> " : "");
+      if (*mode == 'l')
+      	write(1, link, readlink(file->path, link, 256));
       my_putchar('\n');
-      free(mtime_str);
-      free(mode_str);
+      free(mtime);
+      free(mode);
     }
   else
     my_printf("%s\n", file->name);
@@ -37,8 +70,10 @@ void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
 
 int		my_ls(t_ls_opts *opts, t_ls_path *path, char first)
 {
+  int		ret;
   t_ls_file	*current;
 
+  ret = 0;
   if (opts->directory || !S_ISDIR(path->target->stat.st_mode))
     my_ls_print(opts, path->target);
   else
@@ -56,8 +91,10 @@ int		my_ls(t_ls_opts *opts, t_ls_path *path, char first)
 	  my_ls_print(opts, current);
 	  current = current->next;
 	}
+      if (opts->recursive && my_ls_recurse(opts, path))
+	ret = 1;
     }
-  return (0);
+  return (ret);
 }
 
 int		main(int argc, char **argv)
@@ -70,6 +107,7 @@ int		main(int argc, char **argv)
   if (parse_args(&args, argc, argv))
     return (84);
   args.opts.stat_func = args.opts.list ? lstat : stat;
+  args.opts.arg_paths |= args.opts.recursive;
   i = 0;
   ret = 0;
   while (args.paths[i].str)

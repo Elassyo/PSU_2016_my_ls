@@ -10,7 +10,7 @@
 
 CC		=	gcc
 
-CFLAGS		=	-c -g -W -Wall -Wextra -Iinclude -O3
+CFLAGS		=	-c -g -W -Wall -Wextra -Iinclude
 
 LDFLAGS		=	-Llib/my -lmy
 
