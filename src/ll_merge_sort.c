@@ -32,7 +32,7 @@ int	ll_cmp(t_ls_opts *opts, t_ls_file *a, t_ls_file *b)
   if (opts->sort_time)
     ret = a->stat.st_mtime > b->stat.st_mtime;
   else
-    ret = my_strcmp(a->name, b->name) > 0;
+    ret = my_strcmp_uncase(a->name, b->name) > 0;
   return (opts->reverse ? !ret : ret);
 }
 

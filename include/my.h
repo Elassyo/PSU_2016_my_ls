@@ -60,6 +60,7 @@ int	my_show_wordtab(char **tab);
 void	my_sort_int_tab(int *arr, int size);
 int	my_strlen(char *str);
 int	my_strcmp(char *s1, char *s2);
+int	my_strcmp_uncase(char *s1, char *s2);
 int	my_strncmp(char *s1, char *s2, int n);
 char	*my_strcat(char *dest, char *src);
 char	*my_strncat(char *dest, char *src, int n);

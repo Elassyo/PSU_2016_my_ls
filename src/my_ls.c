@@ -5,7 +5,7 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Mon Nov 28 21:06:58 2016 Arthur Melin
-** Last update Thu Dec  1 16:04:11 2016 Arthur Melin
+** Last update Thu Dec  1 16:20:04 2016 Arthur Melin
 */
 
 #include <my_ls.h>
@@ -19,19 +19,15 @@ void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
     {
       mode_str = stat_get_mode_str(file->stat.st_mode);
       mtime_str = stat_get_mtime_str(file->stat.st_mtime);
+      my_printf("%s %ld %-10s %-10s", mode_str, file->stat.st_nlink,
+		getpwuid(file->stat.st_uid)->pw_name,
+		getgrgid(file->stat.st_gid)->gr_name);
       if (*mode_str == 'c' || *mode_str == 'b')
-	my_printf("%s\t%ld\t%s\t%s\t%d,\t%d\t%s\t%s\n",
-		  mode_str, file->stat.st_nlink,
-		  getpwuid(file->stat.st_uid)->pw_name,
-		  getgrgid(file->stat.st_gid)->gr_name,
-		  major(file->stat.st_rdev), minor(file->stat.st_rdev),
-		  mtime_str, file->name);
+	my_printf("%5d,%4d ", major(file->stat.st_rdev), minor(file->stat.st_rdev));
       else
-	my_printf("%s\t%ld\t%s\t%s\t\t%lld\t%s\t%s\n",
-		  mode_str, file->stat.st_nlink,
-		  getpwuid(file->stat.st_uid)->pw_name,
-		  getgrgid(file->stat.st_gid)->gr_name,
-		  file->stat.st_size, mtime_str, file->name);
+	my_printf("%10lld ", file->stat.st_size);
+      my_printf("%s %s", mtime_str, file->name);
+      my_putchar('\n');
       free(mtime_str);
       free(mode_str);
     }
