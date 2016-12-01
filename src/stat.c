@@ -21,7 +21,10 @@ char	*stat_get_mtime_str(time_t mtime)
   ctime_fmt = ctime(&mtime);
   my_strncpy(mtime_str, ctime_fmt + 4, 3);
   my_strncpy(mtime_str + 4, ctime_fmt + 8, 2);
-  my_strncpy(mtime_str + 7, ctime_fmt + 11, 5);
+  if (mtime < (time(NULL) - 15778458) || mtime > time(NULL))
+    my_strncpy(mtime_str + 8, ctime_fmt + 20, 4);
+  else
+    my_strncpy(mtime_str + 7, ctime_fmt + 11, 5);
   mtime_str[12] = 0;
   return (mtime_str);
 }

@@ -5,7 +5,7 @@
 ## Login   <arthur.melin@epitech.net>
 ##
 ## Started on  Thu Nov 24 21:40:26 2016 Arthur Melin
-## Last update Wed Nov 30 23:15:24 2016 Arthur Melin
+## Last update Thu Dec  1 15:49:54 2016 Arthur Melin
 ##
 
 CC		=	gcc
@@ -24,6 +24,7 @@ SRC		=	my_ls.c		\
 			handle_error.c	\
 			parse_args.c	\
 			fs.c		\
+			ll_merge_sort.c	\
 			stat.c
 
 INCDIR		=	include

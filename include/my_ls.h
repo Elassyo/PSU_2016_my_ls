@@ -5,7 +5,7 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Mon Nov 28 21:33:09 2016 Arthur Melin
-** Last update Thu Dec  1 14:11:42 2016 Arthur Melin
+** Last update Thu Dec  1 15:50:51 2016 Arthur Melin
 */
 
 #ifndef MY_LS_H_
@@ -68,5 +68,7 @@ long		fs_get_total(t_ls_path *path);
 
 char	*stat_get_mode_str(mode_t mode);
 char	*stat_get_mtime_str(time_t mtime);
+
+t_ls_file	*ll_merge_sort(t_ls_opts *opts, t_ls_file *first);
 
 #endif /* !MY_LS_H_ */

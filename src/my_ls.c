@@ -5,7 +5,7 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Mon Nov 28 21:06:58 2016 Arthur Melin
-** Last update Thu Dec  1 14:01:33 2016 Arthur Melin
+** Last update Thu Dec  1 15:58:33 2016 Arthur Melin
 */
 
 #include <my_ls.h>
@@ -19,11 +19,19 @@ void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
     {
       mode_str = stat_get_mode_str(file->stat.st_mode);
       mtime_str = stat_get_mtime_str(file->stat.st_mtime);
-      my_printf("%s %ld %s %s %lld %s %s\n",
-                mode_str, file->stat.st_nlink,
-                getpwuid(file->stat.st_uid)->pw_name,
-                getgrgid(file->stat.st_gid)->gr_name,
-                file->stat.st_size, mtime_str, file->name);
+      if (*mode_str == 'c' || *mode_str == 'b')
+	my_printf("%s %ld %s %s %d, %d %s %s\n",
+		  mode_str, file->stat.st_nlink,
+		  getpwuid(file->stat.st_uid)->pw_name,
+		  getgrgid(file->stat.st_gid)->gr_name,
+		  major(file->stat.st_rdev), minor(file->stat.st_rdev),
+		  mtime_str, file->name);
+      else
+	my_printf("%s %ld %s %s %lld %s %s\n",
+		  mode_str, file->stat.st_nlink,
+		  getpwuid(file->stat.st_uid)->pw_name,
+		  getgrgid(file->stat.st_gid)->gr_name,
+		  file->stat.st_size, mtime_str, file->name);
       free(mtime_str);
       free(mode_str);
     }
@@ -39,6 +47,9 @@ int		my_ls(t_ls_opts *opts, t_ls_path *path, char first)
     my_ls_print(opts, path->target);
   else
     {
+      if (fs_read_path(opts, path))
+      	return (1);
+      path->content = ll_merge_sort(opts, path->content);
       if (opts->arg_paths)
 	my_printf("%s%s:\n", first ? "" : "\n", path->target->path);
       if (opts->list)
@@ -61,14 +72,14 @@ int		main(int argc, char **argv)
 
   my_memset(&args, 0, sizeof(t_ls_args));
   if (parse_args(&args, argc, argv))
-      return (84);
+    return (84);
   args.opts.stat_func = args.opts.list ? lstat : stat;
   i = 0;
   ret = 0;
   while (args.paths[i].str)
     {
       args.paths[i].target = fs_read_file(&args.opts, args.paths[i].str, NULL);
-      if (args.paths[i].target && !fs_read_path(&args.opts, &args.paths[i]))
+      if (args.paths[i].target)
       	my_ls(&args.opts, &args.paths[i], i == 0);
       else
 	ret = 84;
