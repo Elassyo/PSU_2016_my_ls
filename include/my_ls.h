@@ -5,12 +5,15 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Mon Nov 28 21:33:09 2016 Arthur Melin
-** Last update Thu Dec  1 12:45:10 2016 Arthur Melin
+** Last update Thu Dec  1 14:11:42 2016 Arthur Melin
 */
 
 #ifndef MY_LS_H_
 # define MY_LS_H_
 
+# include <pwd.h>
+# include <grp.h>
+# include <time.h>
 # include <errno.h>
 # include <dirent.h>
 # include <stdlib.h>
@@ -64,5 +67,6 @@ void		fs_free_path(t_ls_path *path);
 long		fs_get_total(t_ls_path *path);
 
 char	*stat_get_mode_str(mode_t mode);
+char	*stat_get_mtime_str(time_t mtime);
 
 #endif /* !MY_LS_H_ */

@@ -5,10 +5,26 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Thu Dec  1 13:40:53 2016 Arthur Melin
-** Last update Thu Dec  1 13:58:08 2016 Arthur Melin
+** Last update Thu Dec  1 14:12:22 2016 Arthur Melin
 */
 
 #include <my_ls.h>
+
+char	*stat_get_mtime_str(time_t mtime)
+{
+  char	*ctime_fmt;
+  char	*mtime_str;
+
+  if (!(mtime_str = malloc(13)))
+    return (NULL);
+  my_memset(mtime_str, ' ', 12);
+  ctime_fmt = ctime(&mtime);
+  my_strncpy(mtime_str, ctime_fmt + 4, 3);
+  my_strncpy(mtime_str + 4, ctime_fmt + 8, 2);
+  my_strncpy(mtime_str + 7, ctime_fmt + 11, 5);
+  mtime_str[12] = 0;
+  return (mtime_str);
+}
 
 char	stat_get_type_chr(mode_t mode)
 {

@@ -13,11 +13,18 @@
 void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
 {
   char		*mode_str;
+  char		*mtime_str;
 
   if (opts->list)
     {
       mode_str = stat_get_mode_str(file->stat.st_mode);
-      my_printf("%s %s\n", mode_str, file->name);
+      mtime_str = stat_get_mtime_str(file->stat.st_mtime);
+      my_printf("%s %ld %s %s %lld %s %s\n",
+                mode_str, file->stat.st_nlink,
+                getpwuid(file->stat.st_uid)->pw_name,
+                getgrgid(file->stat.st_gid)->gr_name,
+                file->stat.st_size, mtime_str, file->name);
+      free(mtime_str);
       free(mode_str);
     }
   else
