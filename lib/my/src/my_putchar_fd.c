@@ -1,5 +1,5 @@
 /*
-** my_putstr.c for libmy in /home/arthur.melin/Code/libmy/srcs
+** my_putchar_fd.c for libmy in /home/arthur.melin/Code/libmy/srcs
 **
 ** Made by Arthur Melin
 ** Login   <arthur.melin@epitech.net>
@@ -11,8 +11,7 @@
 #include "my.h"
 #include <unistd.h>
 
-int	my_putstr(char *str)
+void	my_putchar_fd(int fd, char c)
 {
-  write(STDOUT_FILENO, str, my_strlen(str));
-  return (0);
+  write(fd, &c, 1);
 }

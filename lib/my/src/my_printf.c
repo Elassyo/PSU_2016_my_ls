@@ -26,8 +26,8 @@ uintmax_t	my_printf_arg_mask(int length_modifier)
   return (mask);
 }
 
-static int		my_printf_do(const char *str, va_list *args,
-				     int *written)
+static int		my_printf_do(int fd, const char *str,
+                        	     va_list *args, int *written)
 {
   const char		*str_start;
   int			i;
@@ -37,6 +37,7 @@ static int		my_printf_do(const char *str, va_list *args,
   str_start = str;
   str++;
   my_memset(&fmt, 0, sizeof(fmt));
+  fmt.fd = fd;
   my_printf_parse_flags(&fmt, &str);
   my_printf_parse_width(&fmt, &str, args);
   my_printf_parse_precision(&fmt, &str, args);
@@ -53,9 +54,9 @@ static int		my_printf_do(const char *str, va_list *args,
   return (0);
 }
 
-int		my_printf(const char *format, ...)
+int		my_fprintf(int fd, const char *format, ...)
 {
-  int		offset;
+  int		off;
   int		written;
   va_list	args;
 
@@ -65,14 +66,14 @@ int		my_printf(const char *format, ...)
   va_start(args, format);
   while (*format)
     {
-      offset = 0;
-      if (*format != '%' || !(offset = my_printf_do(format, &args, &written)))
+      off = 0;
+      if (*format != '%' || !(off = my_printf_do(fd, format, &args, &written)))
 	{
-	  my_putchar(*format);
-	  offset = 1;
+	  my_putchar_fd(fd, *format);
+	  off = 1;
 	  written++;
 	}
-      format += offset;
+      format += off;
     }
   va_end(args);
   return (written);

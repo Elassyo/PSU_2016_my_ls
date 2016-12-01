@@ -5,33 +5,30 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Tue Nov 29 16:58:54 2016 Arthur Melin
-** Last update Tue Nov 29 17:21:23 2016 Arthur Melin
+** Last update Thu Dec  1 00:27:11 2016 Arthur Melin
 */
 
 #include <my_ls.h>
 
 int	parse_opt(t_ls_opts *opts, char *arg)
 {
-  char	*err;
-
   while (*arg)
     {
-      if (*arg == 'l')
-	opts->lst = 1;
-      else if (*arg == 'R')
-	opts->rec = 1;
+      if (*arg == 'a')
+	opts->all = 1;
       else if (*arg == 'd')
-	opts->dir = 1;
+	opts->directory = 1;
+      else if (*arg == 'l')
+	opts->list = 1;
+      else if (*arg == 'R')
+	opts->recursive = 1;
       else if (*arg == 'r')
-	opts->rev = 1;
+	opts->reverse = 1;
       else if (*arg == 't')
-	opts->tim = 1;
+	opts->sort_time = 1;
       else
 	{
-	  err = my_strdup("invalid option -- \'_\'\n");
-	  err[19] = *arg;
-	  my_puterr(err);
-	  free(err);
+	  my_fprintf(2, "./my_ls: invalid option -- \'%c\'\n", *arg);
 	  return (1);
 	}
       arg++;
@@ -69,21 +66,23 @@ int	parse_args(t_ls_args *args, int argc, char **argv)
 
   if ((ret = parse_opts(&args->opts, argc, argv)) == -1)
     return (1);
-  if (!(args->paths = malloc((ret == 0 ? 2 : ret + 1) * sizeof(char *))))
+  if (!(args->paths = malloc((ret == 0 ? 2 : ret + 1) * sizeof(t_ls_path))))
     {
       my_puterr("error: malloc failed\n");
       return (1);
     }
+  my_memset(args->paths, 0, (ret == 0 ? 2 : ret + 1) * sizeof(t_ls_path));
   i = 0;
   if (ret == 0)
-    args->paths[i++] = my_strdup(".");
+    args->paths[i++].str = my_strdup(".");
   else
     {
+      args->opts.arg_paths = ret > 1;
       j = 0;
       while (++j < argc)
       	if (*argv[j] != '-')
-      	  args->paths[i++] = my_strdup(argv[j]);
+      	  args->paths[i++].str = my_strdup(argv[j]);
     }
-  args->paths[i] = NULL;
+  args->paths[i].str = NULL;
   return (0);
 }

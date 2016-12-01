@@ -31,12 +31,12 @@ int	my_printf_chr(t_printf_fmt *fmt, va_list *args, int *written_ptr)
   if (!fmt->flag_ljust)
     {
       while (fmt->field_width - 1  > 0 && fmt->field_width-- && ++written)
-      	my_putchar(' ');
+      	my_putchar_fd(fmt->fd, ' ');
     }
-  my_putchar(va_arg(*args, int));
+  my_putchar_fd(fmt->fd, va_arg(*args, int));
   written++;
   while (fmt->flag_ljust && written < fmt->field_width && ++written)
-    my_putchar(' ');
+    my_putchar_fd(fmt->fd, ' ');
   *written_ptr += written;
   return (0);
 }
@@ -54,12 +54,12 @@ int	my_printf_str(t_printf_fmt *fmt, va_list *args, int *written_ptr)
   if (!fmt->flag_ljust)
     {
       while (fmt->field_width - length > 0 && fmt->field_width-- && ++written)
-      	my_putchar(' ');
+      	my_putchar_fd(fmt->fd, ' ');
     }
-  my_putstr(str);
+  my_putstr_fd(fmt->fd, str);
   written += length;
   while (fmt->flag_ljust && written < fmt->field_width && ++written)
-    my_putchar(' ');
+    my_putchar_fd(fmt->fd, ' ');
   *written_ptr += written;
   return (0);
 }
@@ -77,17 +77,17 @@ int	my_printf_str_np(t_printf_fmt *fmt, va_list *args, int *written_ptr)
   if (!fmt->flag_ljust)
     {
       while (fmt->field_width - length > 0 && fmt->field_width-- && ++written)
-      	my_putchar(' ');
+      	my_putchar_fd(fmt->fd, ' ');
     }
   while (*str)
     {
       if (my_isprintable(*str) && ++written)
-	my_putchar(*str++);
+	my_putchar_fd(fmt->fd, *str++);
       else
-	written += my_printf("\\%03hho", *str++);
+	written += my_fprintf(fmt->fd, "\\%03hho", *str++);
     }
   while (fmt->flag_ljust && written < fmt->field_width && ++written)
-    my_putchar(' ');
+    my_putchar_fd(fmt->fd, ' ');
   *written_ptr += written;
   return (0);
 }
@@ -100,6 +100,6 @@ int	my_printf_err(t_printf_fmt *fmt, va_list *args, int *written_ptr)
   (void)args;
   err_msg = strerror(errno);
   *written_ptr += my_strlen(err_msg);
-  my_putstr(err_msg);
+  my_putstr_fd(fmt->fd, err_msg);
   return (0);
 }

@@ -26,8 +26,7 @@ SRCDIR	=	src
 
 OBJDIR	=	tmp
 
-SRC	=	disp_stdarg.c		\
-		my_find_prime_sup.c 	\
+SRC	=	my_find_prime_sup.c 	\
 		my_getnbr_base.c 	\
 		my_getnbr.c 		\
 		my_isalnum.c 		\
@@ -52,12 +51,11 @@ SRC	=	disp_stdarg.c		\
 		my_printf_nbr_bases.c	\
 		my_printf_chars.c	\
 		my_printf_misc.c	\
-		my_putchar.c 		\
+		my_putchar_fd.c		\
 		my_putchar_hex.c 	\
 		my_putnbr_base.c 	\
 		my_put_nbr.c 		\
-		my_puterr.c		\
-		my_putstr.c 		\
+		my_putstr_fd.c 		\
 		my_revstr.c 		\
 		my_showmem.c 		\
 		my_showstr.c 		\
@@ -82,8 +80,7 @@ SRC	=	disp_stdarg.c		\
 		my_strstr.c 		\
 		my_str_to_wordtab.c 	\
 		my_strupcase.c 		\
-		my_swap.c		\
-		sum_stdarg.c
+		my_swap.c
 
 HDR	=	my.h			\
 		my_printf.h
@@ -99,13 +96,13 @@ all: $(NAME)
 $(INCDIR):
 	$(MKDIR) $(INCDIR)
 
-dist: $(NAME) $(INCDIR)
+dist: $(NAME) | $(INCDIR)
 	$(CP) $(INC) $(INCDIR)/
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(addprefix $(SRCDIR)/, $(HDR)) $(OBJDIR)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(addprefix $(SRCDIR)/, $(HDR)) | $(OBJDIR)
 	$(CC) $< $(CFLAGS) -o $@
 
 $(NAME): $(addprefix $(OBJDIR)/, $(OBJ))

@@ -20,6 +20,7 @@
 
 typedef struct	s_printf_fmt
 {
+  int		fd;
   char		flag_ljust;
   char		flag_plus;
   char		flag_space;

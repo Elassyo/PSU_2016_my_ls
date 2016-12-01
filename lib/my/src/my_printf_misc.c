@@ -51,9 +51,8 @@ int		my_printf_wrt(t_printf_fmt *fmt, va_list *args,
 int		my_printf_pct(t_printf_fmt *fmt, va_list *args,
 			      int *written_ptr)
 {
-  (void)fmt;
   (void)args;
-  my_putchar('%');
+  my_putchar_fd(fmt->fd, '%');
   (*written_ptr)++;
   return (0);
 }

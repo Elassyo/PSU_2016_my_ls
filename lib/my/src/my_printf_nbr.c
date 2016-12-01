@@ -29,20 +29,20 @@ int		my_printf_nbr_length(t_printf_fmt *fmt, uintmax_t nbr,
 int	my_printf_nbr_digits(t_printf_fmt *fmt, uintmax_t nbr,
 			     char *base, int written)
 {
-  int	length;
+  int	len;
   int	padding;
-  int	base_length;
+  int	base_len;
 
-  base_length = my_strlen(base);
-  length = my_printf_nbr_length(fmt, nbr, base_length);
+  base_len = my_strlen(base);
+  len = my_printf_nbr_length(fmt, nbr, base_len);
   if (!fmt->flag_ljust && fmt->flag_zero && fmt->precision == -1)
-    padding = fmt->field_width - length;
+    padding = fmt->field_width - len;
   else
-    padding = fmt->precision - length;
+    padding = fmt->precision - len;
   while (padding-- > 0 && ++written)
-    my_putchar(base[0]);
-  while (length-- && ++written)
-    my_putchar(base[nbr / my_power_ite(base_length, length) % base_length]);
+    my_putchar_fd(fmt->fd, base[0]);
+  while (len-- && ++written)
+    my_putchar_fd(fmt->fd, base[nbr / my_power_ite(base_len, len) % base_len]);
   return (written);
 }
 
@@ -60,16 +60,16 @@ int		my_printf_nbr(t_printf_fmt *fmt, uintmax_t nbr,
     {
       padding = fmt->field_width - MY_MAX(length, fmt->precision);
       while (padding-- > 0 && ++written)
-	my_putchar(' ');
+	my_putchar_fd(fmt->fd, ' ');
     }
   if (fmt->flag_hash)
     {
-      my_putstr(base_fmt->prefix);
+      my_putstr_fd(fmt->fd, base_fmt->prefix);
       written += my_strlen(base_fmt->prefix);
     }
   written = my_printf_nbr_digits(fmt, nbr, base_fmt->base, written);
   while (fmt->flag_ljust && written < fmt->field_width && ++written)
-    my_putchar(' ');
+    my_putchar_fd(fmt->fd, ' ');
   *written_ptr += written;
   return (0);
 }
