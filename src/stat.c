@@ -5,7 +5,7 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Thu Dec  1 13:40:53 2016 Arthur Melin
-** Last update Thu Dec  1 14:12:22 2016 Arthur Melin
+** Last update Fri Dec  2 18:03:44 2016 Arthur Melin
 */
 
 #include <my_ls.h>
@@ -50,27 +50,26 @@ char	stat_get_type_chr(mode_t mode)
 
 char	*stat_get_mode_str(mode_t mode)
 {
-  int	i;
-  int	bit;
   char	*mode_str;
 
-  if (!(mode_str = my_strdup("-rwxrwxrwx")))
+  if (!(mode_str = my_strdup("----------")))
     return (NULL);
   mode_str[0] = stat_get_type_chr(mode);
-  i = 1;
-  bit = 0700;
-  while (bit)
-    {
-      if (!(mode & bit))
-	mode_str[i] = '-';
-      bit >>= 1;
-      i++;
-    }
+  mode_str[1] = (mode & S_IRUSR) ? 'r' : '-';
+  mode_str[2] = (mode & S_IWUSR) ? 'w' : '-';
+  mode_str[3] = (mode & S_IXUSR) ? 'x' : '-';
+  mode_str[4] = (mode & S_IRGRP) ? 'r' : '-';
+  mode_str[5] = (mode & S_IWGRP) ? 'w' : '-';
+  mode_str[6] = (mode & S_IXGRP) ? 'x' : '-';
+  mode_str[7] = (mode & S_IROTH) ? 'r' : '-';
+  mode_str[8] = (mode & S_IWOTH) ? 'w' : '-';
+  mode_str[9] = (mode & S_IXOTH) ? 'x' : '-';
+
   if (mode & S_ISUID)
-    mode_str[3] = mode & S_IXUSR ? 's' : 'S';
+    mode_str[3] = (mode & S_IXUSR) ? 's' : 'S';
   if (mode & S_ISGID)
-    mode_str[6] = mode & S_IXGRP ? 's' : 'S';
+    mode_str[6] = (mode & S_IXGRP) ? 's' : 'S';
   if (mode & S_ISVTX)
-    mode_str[9] = mode & S_IXOTH ? 't' : 'T';
+    mode_str[9] = (mode & S_IXOTH) ? 't' : 'T';
   return (mode_str);
 }
