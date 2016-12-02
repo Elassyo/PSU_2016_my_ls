@@ -5,7 +5,7 @@
 ** Login   <arthur.melin@epitech.net>
 **
 ** Started on  Mon Nov 28 21:06:58 2016 Arthur Melin
-** Last update Thu Dec  1 16:20:04 2016 Arthur Melin
+** Last update Fri Dec  2 17:44:24 2016 Arthur Melin
 */
 
 #include <my_ls.h>
@@ -49,14 +49,14 @@ void		my_ls_print(t_ls_opts *opts, t_ls_file *file)
     {
       mode = stat_get_mode_str(file->stat.st_mode);
       mtime = stat_get_mtime_str(file->stat.st_mtime);
-      my_printf("%s %3ld %-10s %-10s", mode, file->stat.st_nlink,
+      my_printf("%s %ld %s %s", mode, file->stat.st_nlink,
 		getpwuid(file->stat.st_uid)->pw_name,
 		getgrgid(file->stat.st_gid)->gr_name);
       if (*mode == 'c' || *mode == 'b')
-	my_printf("%5d,%4d ", major(file->stat.st_rdev),
+	my_printf("%d,%d ", major(file->stat.st_rdev),
 	          minor(file->stat.st_rdev));
       else
-	my_printf("%10lld ", file->stat.st_size);
+	my_printf("%lld ", file->stat.st_size);
       my_printf("%s %s%s", mtime, file->name, *mode == 'l' ? " -> " : "");
       if (*mode == 'l')
       	write(1, link, readlink(file->path, link, 256));

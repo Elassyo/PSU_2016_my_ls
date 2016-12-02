@@ -5,12 +5,12 @@
 ## Login   <arthur.melin@epitech.net>
 ##
 ## Started on  Thu Nov 24 21:40:26 2016 Arthur Melin
-## Last update Thu Dec  1 15:49:54 2016 Arthur Melin
+## Last update Thu Dec  1 19:51:19 2016 Arthur Melin
 ##
 
 CC		=	gcc
 
-CFLAGS		=	-c -g -W -Wall -Wextra -Iinclude
+CFLAGS		=	-c -g -W -Wall -Wextra -Iinclude -O3
 
 LDFLAGS		=	-Llib/my -lmy
 
