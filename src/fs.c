@@ -44,14 +44,14 @@ int		fs_read_path(t_ls_opts *opts, t_ls_path *path)
   t_ls_file	*last;
   t_ls_file	*file;
 
-  if (!(d = opendir(path->target->path)))
-    return (handle_error("cannot open directory", path->target->path, 1));
+  if (!(d = opendir(path->str)))
+    return (handle_error("cannot open directory", path->str, 1));
   last = NULL;
   while ((ent = readdir(d)))
     {
       if (ent->d_name[0] != '.' || opts->all)
 	{
-	  if (!(file = fs_read_file(opts, path->target->path, ent->d_name)))
+	  if (!(file = fs_read_file(opts, path->str, ent->d_name)))
 	    return (1);
 	  if (last)
 	    last->next = file;
@@ -61,6 +61,7 @@ int		fs_read_path(t_ls_opts *opts, t_ls_path *path)
 	}
     }
   closedir(d);
+  spacing_calc(path);
   return (0);
 }
 

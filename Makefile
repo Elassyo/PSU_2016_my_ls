@@ -24,6 +24,7 @@ SRC		=	my_ls.c		\
 			handle_error.c	\
 			parse_args.c	\
 			fs.c		\
+			spacing.c	\
 			ll_merge_sort.c	\
 			stat.c
 

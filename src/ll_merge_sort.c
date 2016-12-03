@@ -66,7 +66,7 @@ t_ls_file	*ll_merge_sort(t_ls_opts *opts, t_ls_file *first)
   t_ls_file	*l1;
   t_ls_file	*l2;
 
-  if (!first->next)
+  if (!first || !first->next)
     return (first);
   old = first;
   mid = ll_len(old) / 2;
