@@ -95,7 +95,8 @@ int		my_ls(t_ls_opts *opts, t_ls_path *path, char first)
 	  my_ls_print(opts, current, &path->spacing);
 	  current = current->next;
 	}
-      ret |= opts->recursive && my_ls_recurse(opts, path);
+      if (opts->recursive)
+      	ret |= my_ls_recurse(opts, path);
     }
   return (ret);
 }
@@ -116,9 +117,7 @@ int		main(int argc, char **argv)
   while (args.paths[i].str)
     {
       args.paths[i].target = fs_read_file(&args.opts, args.paths[i].str, NULL);
-      if (args.paths[i].target)
-	my_ls(&args.opts, &args.paths[i], i == 0);
-      else
+      if (!(args.paths[i].target) || my_ls(&args.opts, &args.paths[i], i == 0))
 	ret = 84;
       fs_free_path(&args.paths[i++]);
     }
